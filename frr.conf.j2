@@ -1,0 +1,16 @@
+hostname opnsense
+log stdout
+
+router bgp {{ bgp.asn }}
+ bgp router-id {{ bgp.router_id }}
+
+{% for n in neighbors %}
+ neighbor {{ n.ip }} remote-as {{ n.remote_as }}
+ neighbor {{ n.ip }} password {{ n.password }}
+{% endfor %}
+
+ address-family ipv4 unicast
+{% for n in neighbors %}
+  neighbor {{ n.ip }} activate
+{% endfor %}
+ exit-address-family

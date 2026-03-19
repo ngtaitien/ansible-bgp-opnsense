@@ -1,0 +1,12 @@
+bgp:
+  asn: 64556
+  router_id: 10.221.222.81
+
+neighbors:
+  - ip: 10.221.222.82
+    remote_as: 7552
+    password: "Ipcore@123"
+
+  - ip: 10.221.222.83
+    remote_as: 7552
+    password: Ipcore@123"

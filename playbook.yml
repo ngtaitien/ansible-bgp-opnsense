@@ -1,0 +1,41 @@
+- name: FULL automate FRR on OPNsense
+  hosts: opnsense
+  gather_facts: no
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+    - name: Stop OPNsense FRR service
+      shell: service frr stop
+      ignore_errors: yes
+
+    - name: Kill old FRR processes
+      shell: |
+        pkill -f bgpd || true
+        pkill -f zebra || true
+        pkill -f watchfrr || true
+
+    - name: Upload FRR config
+      template:
+        src: frr.conf.j2
+        dest: /usr/local/etc/frr/frr.conf
+
+    - name: Start zebra
+      shell: /usr/local/sbin/zebra -d
+
+    - name: Start bgpd
+      shell: /usr/local/sbin/bgpd -d -f /usr/local/etc/frr/frr.conf
+
+    - name: Wait 2s
+      pause:
+        seconds: 2
+
+    - name: Check BGP
+      shell: vtysh -c "show ip bgp summary"
+      register: result
+      ignore_errors: yes
+
+    - debug:
+        var: result.stdout_lines

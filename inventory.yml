@@ -1,0 +1,7 @@
+all:
+  hosts:
+    opnsense:
+      ansible_host: <IP MGMT>
+      ansible_user: root
+      ansible_password: <pass>
+      ansible_connection: ssh
